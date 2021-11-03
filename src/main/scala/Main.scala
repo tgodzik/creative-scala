@@ -1,34 +1,24 @@
-
-
-
-def runExample(name: String)(f: => Unit) =
-    println(Console.MAGENTA + s"$name example:" + Console.RESET)
-    f
-    println()
+import doodle.image._
+import doodle.core._
+import doodle.image.syntax._
+import doodle.java2d._
+import doodle.effect.Writer.Png
 
 @main
 def main(): Unit =
-    runExample("Trait Params")(TraitParams.test)
-    
-    runExample("Enum Types")(EnumTypes.test)
+  val allImages: List[Drawable] = List(
+    Circle,
+    Square
+  )
 
-    runExample("Context Functions")(ContextFunctions.test)
+  val fulImage =
+    allImages.zipWithIndex.groupBy { case (_, index) => index / 10 }.map {
+      case (_, group) =>
+        group.foldLeft(Image.empty) { case (pre, (drawable, index)) =>
+          pre.beside(drawable.image())
+        }
+    }.foldLeft(Image.empty){ case (pre, img) =>
+          pre.below(img)
+        }
 
-    runExample("Given Instances")(GivenInstances.test)
-
-    runExample("Conversion")(Conversion.test)
-
-    runExample("Union Types")(UnionTypes.test)
-
-    runExample("Intersection Types")(IntersectionTypes.test)
-
-    runExample("Type Lambda")(TypeLambdas.test)
-
-    runExample("Multiversal Equality")(MultiversalEquality.test)
-    runExample("Parameter Untupling")(ParameterUntupling.test)
-
-    runExample("Structural Types")(StructuralTypes.test)
-    runExample("Pattern Matching")(PatternMatching.test)
-
-    runExample("") {}
-
+  fulImage.write[Png]("mosaic.png")

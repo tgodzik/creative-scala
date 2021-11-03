@@ -9,5 +9,6 @@ lazy val root = project
         "-sourceroot",
         baseDirectory.in(ThisBuild).value.toString
     ),
+    libraryDependencies += "org.creativescala" %% "doodle" % "0.9.25",
     scalaVersion := "3.1.0"
   )
